@@ -1,66 +1,33 @@
 <template>
   <section class="catalog">
     <goods-list :goods="goods" />
-
-    <ul class="catalog__pagination pagination">
-          <li class="pagination__item">
-            <a class="pagination__link pagination__link--arrow pagination__link--disabled" aria-label="Предыдущая страница">
-              <svg width="8" height="14" fill="currentColor">
-                <use xlink:href="#icon-arrow-left"></use>
-              </svg>
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link pagination__link--current">
-              1
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              2
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              3
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              4
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              ...
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              10
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link pagination__link--arrow" href="#" aria-label="Следующая страница">
-              <svg width="8" height="14" fill="currentColor">
-                <use xlink:href="#icon-arrow-right"></use>
-              </svg>
-            </a>
-          </li>
-    </ul>
+    <base-pagination v-model="currentPage" :elements-count="goodsCount" :elements-per-page="goodsPerPage" />
   </section>
 </template>
 
 <script>
+import BasePagination from './components/BasePagination.vue'
 import GoodsList from './components/GoodsList'
 import goods from './data/goods'
 
 export default {
   name: 'App',
-  components: {GoodsList},
+  components: {GoodsList, BasePagination},
   data() {
     return {
-      goods
+      currentPage: 1,
+      goodsPerPage: 3,
+    }
+  },
+
+  computed: {
+    goods() {
+      const listOffset = (this.currentPage - 1) * this.goodsPerPage
+      return goods.slice(listOffset, listOffset + this.goodsPerPage)
+    },
+
+    goodsCount() {
+      return goods.length
     }
   }
 }
