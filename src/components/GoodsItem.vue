@@ -2,8 +2,8 @@
   <li class="catalog__item">
       <a class="catalog__pic" href="#">
         <img
-          :src="'/img/goods/' + item.imgID + '_350.png'"
-          :srcset="'/img/goods/' + item.imgID + '_700.png 2x'"
+          :src="'/img/goods/' + item.id + '_350.png'"
+          :srcset="'/img/goods/' + item.id + '_700.png 2x'"
           :alt="item.title"
         >
       </a>
