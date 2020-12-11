@@ -1,4 +1,4 @@
-# skillbox3_4
+# webshop
 
 ## Project setup
 ```

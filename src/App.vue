@@ -18,7 +18,8 @@
       />
 
       <section class="catalog">
-        <goods-list :goods="goodsList" />
+        <h2 v-if="goodsList.length === 0">Ничего не найдено</h2>
+        <goods-list :goods="goodsList"/>
         <base-pagination
           v-model="currentPage"
           :elements-count="goodsCount"
