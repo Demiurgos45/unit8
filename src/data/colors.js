@@ -34,4 +34,9 @@ export default [
     colorCode: '#f7f700',
     colorName: 'Жёлтый'
   },
+  {
+    id: 8,
+    colorCode: '#8B4513',
+    colorName: 'Коричневый'
+  }
 ]
