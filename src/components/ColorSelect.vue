@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Colors from '../data/colors'
+import Colors from '@/data/colors'
 
 export default {
   
