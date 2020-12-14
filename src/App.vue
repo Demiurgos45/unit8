@@ -1,87 +1,41 @@
 <template>
-  <main class="content container">
-    <div class="content__top content__top--catalog">
-      <h1 class="content__title">
-        Каталог
-      </h1>
-      <span class="content__info">
-        Количество наименований: {{ goodsCount }}
-      </span>
-    </div>
-
-    <div class="content__catalog">
-      <goods-filter 
-        :price-from.sync="filterPriceFrom"
-        :price-to.sync="filterPriceTo"
-        :category-id.sync="filterCategoryId"
-        :color-id.sync="filterColorId"
-        :current-page.sync="currentPage"
-      />
-
-      <section class="catalog">
-        <h2 v-if="goodsList.length === 0">Ничего не найдено</h2>
-        <goods-list :goods="goodsList"/>
-        <base-pagination
-          v-model="currentPage"
-          :elements-count="goodsCount"
-          :elements-per-page="goodsPerPage"
-        />
-      </section>
-      
-    </div>
-  </main>
+  <component
+    :is="getCurrentPage"
+    :page-params="cureentPageParams"
+    @selectPage="(pageName, pageParams) => selectPage(pageName, pageParams)"
+  />
 </template>
 
 <script>
-import BasePagination from './components/BasePagination.vue'
-import GoodsFilter from './components/GoodsFilter.vue'
-import GoodsList from './components/GoodsList'
-import goods from './data/goods'
+import ListPage from './Pages/ListPage'
+import ItemPage from './Pages/ItemPage'
+import ErrorPage from './Pages/ErrorPage'
+
+const routes ={
+  main: 'list-page',
+  item: 'item-page'
+}
 
 export default {
-  name: 'App',
-  components: {GoodsList, BasePagination, GoodsFilter},
+  components: { ListPage, ItemPage, ErrorPage },
+
   data() {
     return {
-      currentPage: 1,
-      goodsPerPage: 3,
-      filterPriceFrom: 0,
-      filterPriceTo: 0,
-      filterCategoryId: 0,
-      filterColorId: 0
+      currentPage: 'main',
+      cureentPageParams: {test: 'test'}
     }
   },
 
   computed: {
-    filteredGoods() {
-      let filteredGoods = goods
+    getCurrentPage() {
+      return routes[this.currentPage] || 'error-page'
+    }
+  },
 
-      if (this.filterCategoryId > 0) {
-        filteredGoods = filteredGoods.filter(item => item.categoryId === this.filterCategoryId)
-      }
-      
-      if (this.filterPriceFrom > 0) {
-        filteredGoods = filteredGoods.filter(item => item.price > this.filterPriceFrom)
-      }
-
-      if (this.filterPriceTo > 0) {
-        filteredGoods = filteredGoods.filter(item => item.price < this.filterPriceTo)
-      }
-
-      if (this.filterColorId > 0) {
-        filteredGoods = filteredGoods.filter(item => item.colors.includes(this.filterColorId))
-      }
-
-      return filteredGoods
-    },
-
-    goodsList() {
-      const listOffset = (this.currentPage - 1) * this.goodsPerPage
-      return this.filteredGoods.slice(listOffset, listOffset + this.goodsPerPage)
-    },
-
-    goodsCount() {
-      return this.filteredGoods.length
+  methods: {
+    selectPage(pageName, pageParam) {
+      this.currentPage = pageName
+      this.cureentPageParams = pageParam
     }
   }
 }

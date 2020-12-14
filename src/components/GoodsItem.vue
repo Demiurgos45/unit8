@@ -1,6 +1,6 @@
 <template>
   <li class="catalog__item">
-      <a class="catalog__pic" href="#">
+      <a class="catalog__pic" href="#" @click.prevent="$emit('selectPage', 'item', {id: item.id})">
         <img
           :src="'/img/goods/' + item.id + '_350.png'"
           :srcset="'/img/goods/' + item.id + '_700.png 2x'"

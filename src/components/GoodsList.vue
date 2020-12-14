@@ -1,6 +1,10 @@
 <template>
   <ul class="catalog__list" v-if="goods.length > 0">
-    <goods-item v-for="item in goods" :item="item" :key="item.id" />
+    <goods-item v-for="item in goods" 
+      :item="item" 
+      :key="item.id"
+      @selectPage="(pageName, pageParams) => $emit('selectPage', pageName, pageParams)"
+    />
   </ul>
 </template>
 
