@@ -3,7 +3,6 @@
     <goods-item v-for="item in goods" 
       :item="item" 
       :key="item.id"
-      @selectPage="(pageName, pageParams) => $emit('selectPage', pageName, pageParams)"
     />
   </ul>
 </template>

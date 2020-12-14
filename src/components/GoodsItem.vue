@@ -1,6 +1,6 @@
 <template>
   <li class="catalog__item">
-      <a class="catalog__pic" href="#" @click.prevent="$emit('selectPage', 'item', {id: item.id})">
+      <a class="catalog__pic" href="#" @click.prevent="selectPage('item', {id: item.id})">
         <img
           :src="'/img/goods/' + item.id + '_350.png'"
           :srcset="'/img/goods/' + item.id + '_700.png 2x'"
@@ -26,6 +26,7 @@
 
 <script>
 import ColorSelect from './ColorSelect.vue'
+import eventBus from '@/eventBus'
 
 export default {
   components: { ColorSelect },
@@ -34,6 +35,12 @@ export default {
   data() {
     return {
       selectedColorId: 0
+    }
+  },
+
+  methods: {
+    selectPage(pageName, pageParams) {
+      eventBus.$emit('selectPage', pageName, pageParams)
     }
   }
 }

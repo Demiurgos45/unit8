@@ -2,7 +2,6 @@
   <component
     :is="getCurrentPage"
     :page-params="cureentPageParams"
-    @selectPage="(pageName, pageParams) => selectPage(pageName, pageParams)"
   />
 </template>
 
@@ -10,6 +9,7 @@
 import ListPage from './Pages/ListPage'
 import ItemPage from './Pages/ItemPage'
 import ErrorPage from './Pages/ErrorPage'
+import eventBus from './eventBus'
 
 const routes ={
   main: 'list-page',
@@ -33,10 +33,14 @@ export default {
   },
 
   methods: {
-    selectPage(pageName, pageParam) {
+    selectPage(pageName, pageParams) {
       this.currentPage = pageName
-      this.cureentPageParams = pageParam
+      this.cureentPageParams = pageParams
     }
+  },
+
+  created() {
+    eventBus.$on('selectPage', (pageName, pageParams) => this.selectPage(pageName, pageParams))
   }
 }
 

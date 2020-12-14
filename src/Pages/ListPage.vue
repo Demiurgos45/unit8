@@ -22,7 +22,6 @@
         <h2 v-if="goodsList.length === 0">Ничего не найдено</h2>
         <goods-list
           :goods="goodsList"
-          @selectPage="(pageName, pageParams) => $emit('selectPage', pageName, pageParams)"
         />
         <base-pagination
           v-model="currentPage"
