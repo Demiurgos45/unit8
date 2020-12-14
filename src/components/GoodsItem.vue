@@ -17,7 +17,10 @@
       <span class="catalog__price">
         {{ item.price }} ₽
       </span>
-      <color-select :colors-list="item.colors" />
+      <color-select
+        :colors-list="item.colors"
+        :color-id.sync="selectedColorId"
+      />
     </li>
 </template>
 
@@ -27,5 +30,11 @@ import ColorSelect from './ColorSelect.vue'
 export default {
   components: { ColorSelect },
   props: ['item'],
+
+  data() {
+    return {
+      selectedColorId: 0
+    }
+  }
 }
 </script>

@@ -14,6 +14,7 @@
         :price-from.sync="filterPriceFrom"
         :price-to.sync="filterPriceTo"
         :category-id.sync="filterCategoryId"
+        :color-id.sync="filterColorId"
         :current-page.sync="currentPage"
       />
 
@@ -47,6 +48,7 @@ export default {
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategoryId: 0,
+      filterColorId: 0
     }
   },
 
@@ -64,6 +66,10 @@ export default {
 
       if (this.filterPriceTo > 0) {
         filteredGoods = filteredGoods.filter(item => item.price < this.filterPriceTo)
+      }
+
+      if (this.filterColorId > 0) {
+        filteredGoods = filteredGoods.filter(item => item.colors.includes(this.filterColorId))
       }
 
       return filteredGoods

@@ -23,7 +23,11 @@
         </label>
       </fieldset>
       
-      <color-select :colors-list="getAllColors()" />
+      <color-select 
+        :colors-list="getAllColors()"
+        :color-id.sync="currentColorId"
+        :show-all-colors="true"
+      />
 
       <fieldset class="form__block">
         <legend class="form__legend">Объемб в ГБ</legend>
@@ -95,19 +99,20 @@
 </template>
 
 <script>
-import Categories from '../data/categories'
+import Categories from '@/data/categories'
 import ColorSelect from './ColorSelect.vue'
-import Colors from '../data/colors'
+import Colors from '@/data/colors'
 
 export default {
   components: { ColorSelect },
-  props: ['priceFrom', 'priceTo', 'categoryId', 'currentPage'],
+  props: ['priceFrom', 'priceTo', 'categoryId', 'colorId', 'currentPage'],
 
   data() {
     return {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: 0,
+      currentColorId: 0
     }
   },
 
@@ -122,22 +127,24 @@ export default {
   },
 
   methods: {
-    setFilter(valueFrom, valueTo, valueCategoryId) {
+    setFilter(valueFrom, valueTo, valueCategoryId, valueColorId) {
       this.$emit('update:priceFrom', valueFrom)
       this.$emit('update:priceTo', valueTo)
       this.$emit('update:categoryId', valueCategoryId)
+      this.$emit('update:colorId', valueColorId)
       this.$emit('update:currentPage', 1)
     },
 
     filterSubmit() {
-      this.setFilter(this.currentPriceFrom, this.currentPriceTo, this.currentCategoryId)
+      this.setFilter(this.currentPriceFrom, this.currentPriceTo, this.currentCategoryId, this.currentColorId)
     },
 
     filterClear() {
       this.currentPriceFrom = 0
       this.currentPriceTo = 0
       this.currentCategoryId = 0
-      this.setFilter(0, 0, 0)
+      this.currentColorId = 0
+      this.setFilter(0, 0, 0, 0)
     },
 
     getAllColors() {
