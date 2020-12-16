@@ -25,8 +25,8 @@
       
       <color-select 
         :colors-list="getAllColors()"
-        :color-id.sync="currentColorId"
         :show-all-colors="true"
+        :colorId.sync="currentColorId"
       />
 
       <fieldset class="form__block">
