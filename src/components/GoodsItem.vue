@@ -9,13 +9,13 @@
       </a>
 
       <h3 class="catalog__title">
-        <a href="#">
+        <a href="#" @click.prevent="selectPage('item', {id: item.id})">
           {{ item.title }}
         </a>
       </h3>
 
       <span class="catalog__price">
-        {{ item.price }} ₽
+        {{ item.price | numberFormat}} ₽
       </span>
       <color-select
         :colors-list="item.colors"
@@ -26,12 +26,15 @@
 
 <script>
 import ColorSelect from './ColorSelect.vue'
-import eventBus from '@/eventBus'
+import numberFormat from '@/helpers/numberFormat'
+import selectPage from '@/helpers/selectPage'
 
 export default {
   components: { ColorSelect },
   props: ['item'],
-
+  filters: {
+    numberFormat
+  },
   data() {
     return {
       selectedColorId: 0
@@ -39,9 +42,7 @@ export default {
   },
 
   methods: {
-    selectPage(pageName, pageParams) {
-      eventBus.$emit('selectPage', pageName, pageParams)
-    }
+    selectPage
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <component
     :is="getCurrentPage"
-    :page-params="cureentPageParams"
+    :page-params="currentPageParams"
   />
 </template>
 
@@ -17,12 +17,13 @@ const routes ={
 }
 
 export default {
+  name: 'App',
   components: { ListPage, ItemPage, ErrorPage },
 
   data() {
     return {
       currentPage: 'main',
-      cureentPageParams: {test: 'test'}
+      currentPageParams: 0
     }
   },
 
@@ -35,12 +36,14 @@ export default {
   methods: {
     selectPage(pageName, pageParams) {
       this.currentPage = pageName
-      this.cureentPageParams = pageParams
+      this.currentPageParams = pageParams
     }
   },
 
   created() {
-    eventBus.$on('selectPage', (pageName, pageParams) => this.selectPage(pageName, pageParams))
+    eventBus.$on('selectPage', (pageName, pageParams) => {
+      this.selectPage(pageName, pageParams)
+    }) 
   }
 }
 

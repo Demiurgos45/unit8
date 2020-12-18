@@ -41,15 +41,17 @@ import GoodsList from '@/components/GoodsList'
 import goods from '@/data/goods'
 
 export default {
-  name: 'App',
+  props: ['pageParams'],
+
   components: {GoodsList, BasePagination, GoodsFilter},
+
   data() {
     return {
       currentPage: 1,
       goodsPerPage: 3,
       filterPriceFrom: 0,
       filterPriceTo: 0,
-      filterCategoryId: 0,
+      filterCategoryId: this.pageParams,
       filterColorId: 0
     }
   },
@@ -85,7 +87,7 @@ export default {
     goodsCount() {
       return this.filteredGoods.length
     }
-  }
+  },
 }
 </script>
 
