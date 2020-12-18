@@ -45,7 +45,6 @@
             </b>
 
             <fieldset class="form__block">
-              <legend class="form__legend">Цвет:</legend>
               <color-select
                 :colors-list="currentItem[0].colors"
                 :color-id.sync="currentItem[0].colors[0]"
