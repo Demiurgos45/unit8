@@ -8,13 +8,13 @@
           </a>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="#" @click.prevent="selectPage('main', currentItem[0].categoryId)">
-            {{ currentCategory[0].title }}
+          <a class="breadcrumbs__link" href="#" @click.prevent="selectPage('main', currentItem.categoryId)">
+            {{ currentCategory.title }}
           </a>
         </li>
         <li class="breadcrumbs__item">
           <a class="breadcrumbs__link">
-            {{ currentItem[0].title }}
+            {{ currentItem.title }}
           </a>
         </li>
       </ul>
@@ -26,28 +26,28 @@
           <img 
             width="570"
             height="570" 
-            :src="'/img/goods/' + currentItem[0].id + '_350.png'"
-            :srcset="'/img/goods/' + currentItem[0].id + '_700.png 2x'"
-            :alt="currentItem[0].title"
+            :src="'/img/goods/' + currentItem.id + '_350.png'"
+            :srcset="'/img/goods/' + currentItem.id + '_700.png 2x'"
+            :alt="currentItem.title"
           >
         </div>
       </div>
 
       <div class="item__info">
-        <span class="item__code">{{ currentItem[0].id }}</span>
+        <span class="item__code">{{ currentItem.id }}</span>
         <h2 class="item__title">
-          {{ currentItem[0].title }}
+          {{ currentItem.title }}
         </h2>
         <div class="item__form">
           <form class="form" action="#" method="POST">
             <b class="item__price">
-              {{ currentItem[0].price | numberFormat }}
+              {{ currentItem.price | numberFormat }}
             </b>
 
             <fieldset class="form__block">
               <color-select
-                :colors-list="currentItem[0].colors"
-                :color-id.sync="currentItem[0].colors[0]"
+                :colors-list="currentItem.colors"
+                :color-id.sync="currentItem.colors[0]"
               />
             </fieldset>
 
@@ -178,11 +178,11 @@ export default {
 
   computed: {
     currentItem() {
-      return Goods.filter(item => item.id === this.pageParams.id)
+      return Goods.find(item => item.id === this.pageParams.id)
     },
 
     currentCategory() {
-      return Categories.filter(item => item.id === this.currentItem[0].categoryId)
+      return Categories.find(item => item.id === this.currentItem.categoryId)
     }
   },
 

@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="getCurrentPage"
+    :is="selectedPage"
     :page-params="currentPageParams"
   />
 </template>
@@ -28,7 +28,7 @@ export default {
   },
 
   computed: {
-    getCurrentPage() {
+    selectedPage() {
       return routes[this.currentPage] || 'error-page'
     }
   },
@@ -43,7 +43,7 @@ export default {
   created() {
     eventBus.$on('selectPage', (pageName, pageParams) => {
       this.selectPage(pageName, pageParams)
-    }) 
+    })
   }
 }
 

@@ -11,10 +11,7 @@
 
     <div class="content__catalog">
       <goods-filter 
-        :price-from.sync="filterPriceFrom"
-        :price-to.sync="filterPriceTo"
-        :category-id.sync="filterCategoryId"
-        :color-id.sync="filterColorId"
+        v-bind.sync="filterState"
         :current-page.sync="currentPage"
       />
 
@@ -49,31 +46,34 @@ export default {
     return {
       currentPage: 1,
       goodsPerPage: 3,
-      filterPriceFrom: 0,
-      filterPriceTo: 0,
-      filterCategoryId: this.pageParams,
-      filterColorId: 0
+      filterState: {
+        priceFrom: 0,
+        priceTo: 0,
+        categoryId: this.pageParams,
+        colorId: 0,
+      }
     }
   },
 
   computed: {
     filteredGoods() {
       let filteredGoods = goods
-
-      if (this.filterCategoryId > 0) {
-        filteredGoods = filteredGoods.filter(item => item.categoryId === this.filterCategoryId)
+      let filter = this.filterState
+      
+      if (filter.categoryId > 0) {
+        filteredGoods = filteredGoods.filter(item => item.categoryId === filter.categoryId)
       }
       
-      if (this.filterPriceFrom > 0) {
-        filteredGoods = filteredGoods.filter(item => item.price > this.filterPriceFrom)
+      if (filter.priceFrom > 0) {
+        filteredGoods = filteredGoods.filter(item => item.price > filter.priceFrom)
       }
 
-      if (this.filterPriceTo > 0) {
-        filteredGoods = filteredGoods.filter(item => item.price < this.filterPriceTo)
+      if (filter.priceTo > 0) {
+        filteredGoods = filteredGoods.filter(item => item.price < filter.priceTo)
       }
 
-      if (this.filterColorId > 0) {
-        filteredGoods = filteredGoods.filter(item => item.colors.includes(this.filterColorId))
+      if (filter.colorId > 0) {
+        filteredGoods = filteredGoods.filter(item => item.colors.includes(filter.colorId))
       }
 
       return filteredGoods
