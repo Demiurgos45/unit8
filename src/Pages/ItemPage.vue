@@ -3,14 +3,14 @@
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="#" @click.prevent="selectPage('main', 0)">
+          <router-link class="breadcrumbs__link" href="#" :to="{name: 'main', params: {catId: 0}}">
             Каталог
-          </a>
+          </router-link>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="#" @click.prevent="selectPage('main', currentItem.categoryId)">
+          <router-link class="breadcrumbs__link" href="#" :to="{name: 'main', params: {catId: currentItem.categoryId}}">
             {{ currentCategory.title }}
-          </a>
+          </router-link>
         </li>
         <li class="breadcrumbs__item">
           <a class="breadcrumbs__link">
@@ -165,11 +165,8 @@ import Goods from '@/data/goods'
 import Categories from '@/data/categories'
 import ColorSelect from '../components/ColorSelect.vue'
 import numberFormat from '@/helpers/numberFormat.js'
-import selectPage from '@/helpers/selectPage'
 
 export default {
-  props: ['pageParams'],
-
   components: { ColorSelect },
   
   filters: {
@@ -178,18 +175,13 @@ export default {
 
   computed: {
     currentItem() {
-      return Goods.find(item => item.id === this.pageParams.id)
+      return Goods.find(item => item.id === this.$route.params.id)
     },
 
     currentCategory() {
       return Categories.find(item => item.id === this.currentItem.categoryId)
     }
   },
-
-  methods: {
-    selectPage
-  }
-
 }
 </script>
 

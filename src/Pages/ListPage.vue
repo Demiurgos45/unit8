@@ -38,8 +38,6 @@ import GoodsList from '@/components/GoodsList'
 import goods from '@/data/goods'
 
 export default {
-  props: ['pageParams'],
-
   components: {GoodsList, BasePagination, GoodsFilter},
 
   data() {
@@ -49,7 +47,7 @@ export default {
       filterState: {
         priceFrom: 0,
         priceTo: 0,
-        categoryId: this.pageParams,
+        categoryId: +this.$route.params.catId || 0,
         colorId: 0,
       }
     }
@@ -59,7 +57,7 @@ export default {
     filteredGoods() {
       let filteredGoods = goods
       let filter = this.filterState
-      
+
       if (filter.categoryId > 0) {
         filteredGoods = filteredGoods.filter(item => item.categoryId === filter.categoryId)
       }

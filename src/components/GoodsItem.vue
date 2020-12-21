@@ -1,17 +1,17 @@
 <template>
   <li class="catalog__item">
-      <a class="catalog__pic" href="#" @click.prevent="selectPage('item', {id: item.id})">
+      <router-link class="catalog__pic" href="#" :to="{name: 'itemPage', params: {id: item.id}}">
         <img
           :src="'/img/goods/' + item.id + '_350.png'"
           :srcset="'/img/goods/' + item.id + '_700.png 2x'"
           :alt="item.title"
         >
-      </a>
+      </router-link>
 
       <h3 class="catalog__title">
-        <a href="#" @click.prevent="selectPage('item', {id: item.id})">
+        <router-link href="#" :to="{name: 'itemPage', params: {id: item.id}}">
           {{ item.title }}
-        </a>
+        </router-link>
       </h3>
 
       <span class="catalog__price">
@@ -27,7 +27,6 @@
 <script>
 import ColorSelect from './ColorSelect.vue'
 import numberFormat from '@/helpers/numberFormat'
-import selectPage from '@/helpers/selectPage'
 
 export default {
   components: { ColorSelect },
@@ -41,8 +40,5 @@ export default {
     }
   },
 
-  methods: {
-    selectPage
-  }
 }
 </script>
