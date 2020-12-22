@@ -18,7 +18,7 @@
         {{ item.price | numberFormat}} ₽
       </span>
       <color-select
-        :colors-list="item.colors"
+        :colors-list="$store.getters.getEnabledColors(item.colors)"
         :color-id.sync="selectedColorId"
       />
     </li>

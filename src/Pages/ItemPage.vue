@@ -46,7 +46,7 @@
 
             <fieldset class="form__block">
               <color-select
-                :colors-list="currentItem.colors"
+                :colors-list="$store.getters.getEnabledColors(currentItem.colors)"
                 :color-id.sync="currentItem.colors[0]"
               />
             </fieldset>

@@ -24,7 +24,7 @@
       </fieldset>
       
       <color-select 
-        :colors-list="getAllColors()"
+        :colors-list="$store.getters.getAllPallete"
         :show-all-colors="true"
         :colorId.sync="currentColorId"
       />
@@ -101,7 +101,6 @@
 <script>
 import Categories from '@/data/categories'
 import ColorSelect from './ColorSelect.vue'
-import Colors from '@/data/colors'
 
 export default {
   components: { ColorSelect },
@@ -120,10 +119,6 @@ export default {
     categories() {
       return Categories
     },
-
-    colors() {
-      return Colors
-    }
   },
 
   methods: {
@@ -146,10 +141,6 @@ export default {
       this.currentColorId = 0
       this.setFilter(0, 0, 0, 0)
     },
-
-    getAllColors() {
-      return this.colors.map(clr => clr.id)
-    }
 
   },
 

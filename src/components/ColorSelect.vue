@@ -16,17 +16,17 @@
           </span>
         </label>
       </li>
-      <li class="colors__item" v-for="clr in colorsList" :key="clr">
+      <li class="colors__item" v-for="clr in colorsList" :key="clr.id">
         <label class="colors__label">
           <input
             class="colors__radio sr-only"
             type="radio"
             name="color"
-            :value="clr"
-            :checked="colorId === clr"
+            :value="clr.id"
+            :checked="colorId === clr.id"
             v-model="selectedColor"
           >
-          <span class="colors__value" :style="'background-color: ' + getColorCode(clr) + ';'">  
+          <span class="colors__value" :style="'background-color: ' + clr.colorCode + ';'">  
           </span>
         </label>
       </li>
@@ -35,16 +35,13 @@
 </template>
 
 <script>
-import Colors from '@/data/colors'
 
 export default {
   
   props: ['colorsList', 'colorId', 'showAllColors'],
 
   methods: {
-    getColorCode(colorId) {
-      return Colors.filter(clr => clr.id === colorId)[0].colorCode
-    },
+    
   },
 
   computed: {
