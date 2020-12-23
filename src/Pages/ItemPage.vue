@@ -39,7 +39,7 @@
           {{ currentItem.title }}
         </h2>
         <div class="item__form">
-          <form class="form" action="#" method="POST">
+          <form class="form" action="#" method="POST" @submit.prevent="addToCart">
             <b class="item__price">
               {{ currentItem.price | numberFormat }}
             </b>
@@ -84,15 +84,24 @@
 
             <div class="item__row">
               <div class="form__counter">
-                <button type="button" aria-label="Убрать один товар">
+                <button
+                  type="button"
+                  aria-label="Убрать один товар"
+                  @click.prevent="itemAmount--"
+                  :disabled="itemAmount < 2"
+                >
                   <svg width="12" height="12" fill="currentColor">
                     <use xlink:href="#icon-minus"></use>
                   </svg>
                 </button>
 
-                <input type="text" value="1" name="count">
+                <input type="text" v-model="itemAmount">
 
-                <button type="button" aria-label="Добавить один товар">
+                <button
+                  type="button"
+                  aria-label="Добавить один товар"
+                  @click.prevent="itemAmount++"
+                >
                   <svg width="12" height="12" fill="currentColor">
                     <use xlink:href="#icon-plus"></use>
                   </svg>
@@ -169,6 +178,12 @@ import numberFormat from '@/helpers/numberFormat.js'
 export default {
   components: { ColorSelect },
   
+  data() {
+    return {
+      itemAmount: 1,
+    }
+  },
+
   filters: {
     numberFormat
   },
@@ -182,6 +197,13 @@ export default {
       return Categories.find(item => item.id === this.currentItem.categoryId)
     }
   },
+
+  methods: {
+    addToCart() {
+      this.$store.dispatch('addToCart', {id: this.currentItem.id, amount: this.itemAmount})
+    },
+
+  }
 }
 </script>
 
