@@ -55,7 +55,6 @@ export default {
   actions: {
     addToCart(context, addedItem) {
       const cartId = context.state.cartProducts.findIndex( (item) => item.id === addedItem.id)
-      console.log(cartId)
       if (cartId < 0) {
         context.commit('addItem', addedItem)
       }
