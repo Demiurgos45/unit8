@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import ListPage from '@/Pages/ListPage'
-import ErrorPage from '@/Pages/ErrorPage'
-import ItemPage from '@/Pages/ItemPage'
-import CartPage from '@/Pages/CartPage'
+import ListPage from '@/pages/ListPage'
+import ErrorPage from '@/pages/ErrorPage'
+import ItemPage from '@/pages/ItemPage'
+import CartPage from '@/pages/CartPage'
 
 Vue.use(VueRouter)
 

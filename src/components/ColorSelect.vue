@@ -9,7 +9,6 @@
             type="radio"
             name="color"
             :value="0"
-            :checked="colorId === 0"
             v-model="selectedColor"
           >
           <span class="colors__value" :style="'background: linear-gradient(red, yellow, blue);'">  
@@ -23,7 +22,6 @@
             type="radio"
             name="color"
             :value="clr.id"
-            :checked="colorId === clr.id"
             v-model="selectedColor"
           >
           <span class="colors__value" :style="'background-color: ' + clr.colorCode + ';'">  
@@ -46,10 +44,10 @@ export default {
 
   computed: {
     selectedColor: {
-            get: function(){
+            get() {
                 return this.colorId;
             },
-            set: function(newValue){
+            set(newValue) {
                 this.$emit('update:colorId', newValue)
             }   
         },
