@@ -1,19 +1,19 @@
 <template>
   <li class="cart__item product">
     <div class="product__pic">
-      <router-link class="catalog__pic" href="#" :to="{name: 'itemPage', params: {id: item.id}}">
-        <img :src="'/img/goods/' + item.id + '_350.png'" width="120" height="120" alt="item.details.title">
+      <router-link class="catalog__pic" href="#" :to="{name: 'itemPage', params: {id: item.product.id}}">
+        <img :src="item.product.image.file.url" width="120" height="120" alt="item.product.title">
       </router-link>
     </div>
     
-    <router-link class="catalog__pic" href="#" :to="{name: 'itemPage', params: {id: item.id}}">
+    <router-link class="catalog__pic" href="#" :to="{name: 'itemPage', params: {id: item.product.id}}">
       <h3 class="product__title">
-        {{ item.details.title }}
+        {{ item.product.title }}
       </h3>
     </router-link>
               
     <span class="product__code">
-      {{ item.id }}
+      {{ item.product.id }}
     </span>
 
     <div class="product__counter form__counter">
@@ -42,13 +42,13 @@
     </div>
 
     <b class="product__price">
-      {{ item.amount * item.details.price | numberFormat }} ₽
+      {{ item.quantity * item.price | numberFormat }} ₽
     </b>
 
     <button
       class="product__del button-del"
       type="button" aria-label="Удалить товар из корзины"
-      @click.prevent="deleteItem(item.id)"
+      @click.prevent="deleteItem(item.product.id)"
     >
       <svg width="20" height="20" fill="currentColor">
         <use xlink:href="#icon-close"></use>
@@ -70,7 +70,7 @@ export default {
   computed: {
     amount: {
       get() {
-        return this.item.amount
+        return this.item.quantity
       },
       set(val) {
         this.$store.dispatch('updateAmount', {id: this.item.id, amount: val})

@@ -16,7 +16,12 @@
       />
 
       <section class="catalog">
-        <h2 v-if="goodsList.length === 0">Ничего не найдено</h2>
+        <div v-if="isLoadingError">
+          <h3>Ошибка загрузки</h3>
+          <input type="button" value="Попробовать ещё раз" @click.prevent="loadProducts()">
+        </div>
+        <h3 v-else-if="goodsList.length === 0">Ничего не найдено</h3>
+        
         <goods-list
           :goods="goodsList"
         />
@@ -28,17 +33,24 @@
       </section>
       
     </div>
+    <div id="loader" v-show="showLoading">
+      <img src="loader.gif" style="margin: auto;">
+    </div>
+
+    <loading :showLoading="showLoading" />
   </main>
 </template>
 
 <script>
-import BasePagination from '@/components/BasePagination.vue'
-import GoodsFilter from '@/components/GoodsFilter.vue'
+import BasePagination from '@/components/BasePagination'
+import GoodsFilter from '@/components/GoodsFilter'
 import GoodsList from '@/components/GoodsList'
-import goods from '@/data/goods'
+import axios from 'axios'
+import {API_BASE_URL} from '@/config.js'
+import Loading from '@/components/Loading.vue'
 
 export default {
-  components: {GoodsList, BasePagination, GoodsFilter},
+  components: {GoodsList, BasePagination, GoodsFilter, Loading},
 
   data() {
     return {
@@ -49,46 +61,73 @@ export default {
         priceTo: 0,
         categoryId: +this.$route.params.catId || 0,
         colorId: 0,
-      }
+      },
+      productsData: null,
+      isLoadingError: false,
+      showLoading: false
     }
   },
 
   computed: {
-    filteredGoods() {
-      let filteredGoods = goods
-      let filter = this.filterState
-
-      if (filter.categoryId > 0) {
-        filteredGoods = filteredGoods.filter(item => item.categoryId === filter.categoryId)
-      }
-      
-      if (filter.priceFrom > 0) {
-        filteredGoods = filteredGoods.filter(item => item.price > filter.priceFrom)
-      }
-
-      if (filter.priceTo > 0) {
-        filteredGoods = filteredGoods.filter(item => item.price < filter.priceTo)
-      }
-
-      if (filter.colorId > 0) {
-        filteredGoods = filteredGoods.filter(item => item.colors.includes(filter.colorId))
-      }
-
-      return filteredGoods
-    },
 
     goodsList() {
-      const listOffset = (this.currentPage - 1) * this.goodsPerPage
-      return this.filteredGoods.slice(listOffset, listOffset + this.goodsPerPage)
+      return this.productsData ? this.productsData.items : []
     },
 
     goodsCount() {
-      return this.filteredGoods.length
+      return this.productsData ? this.productsData.pagination.total : 0
     }
   },
+
+  methods: {
+    loadProducts() {
+      this.showLoading = true
+      this.isLoadingError = false
+      clearTimeout(this.loadProductsTimer)
+
+      this.loadProductsTimer = setTimeout(() => {
+        axios.get(API_BASE_URL + `/api/products`, {
+          params: {
+            page: this.currentPage,
+            limit: this.goodsPerPage,
+            categoryId: this.filterState.categoryId,
+            minPrice: this.filterState.priceFrom,
+            maxPrice: this.filterState.priceTo,
+            colorId: this.filterState.colorId
+          }
+        })
+          .then(response => this.productsData = response.data)
+          .catch(() => this.isLoadingError = true)
+          .then(() => this.showLoading = false)
+      }, 0)
+      
+    }
+  },
+
+  watch: {
+    currentPage() {
+      this.loadProducts()
+    },
+
+    "filterState.categoryId"() {
+      this.loadProducts()
+    },
+    "filterState.priceFrom"() {
+      this.loadProducts()
+    },
+    "filterState.priceTo"() {
+      this.loadProducts()
+    },
+    "filterState.colorId"() {
+      this.loadProducts()
+    }
+  },
+
+  created() {
+    this.loadProducts()
+  }
 }
 </script>
 
 <style>
-
 </style>

@@ -24,7 +24,7 @@
             :value="clr.id"
             v-model="selectedColor"
           >
-          <span class="colors__value" :style="'background-color: ' + clr.colorCode + ';'">  
+          <span class="colors__value" :style="'background-color: ' + clr.code + ';'">  
           </span>
         </label>
       </li>

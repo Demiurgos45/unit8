@@ -1,5 +1,5 @@
 <template>
-    <main class="content container">
+  <main class="content container">
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -18,7 +18,7 @@
         Корзина
       </h1>
       <span class="content__info">
-        Товаров: {{ $store.getters.goodsCount }}
+        Товаров: {{ itemList.length }}
       </span>
     </div>
 
@@ -26,7 +26,7 @@
       <form class="cart__form form" action="#" method="POST">
         <div class="cart__field">
           <ul class="cart__list">
-            <cart-item v-for="item in itemList" :key="item.id" :item="item" />
+            <cart-item v-for="item in itemList" :key="item.product.id" :item="item" />
           </ul>
         </div>
 
@@ -50,7 +50,7 @@
 <script>
 import numberFormat from '@/helpers/numberFormat.js'
 import {mapGetters} from 'vuex'
-import CartItem from '../components/CartItem.vue'
+import CartItem from '@/components/CartItem.vue'
 
 export default {
   components: { CartItem },

@@ -2,8 +2,7 @@
   <li class="catalog__item">
       <router-link class="catalog__pic" href="#" :to="{name: 'itemPage', params: {id: item.id}}">
         <img
-          :src="'/img/goods/' + item.id + '_350.png'"
-          :srcset="'/img/goods/' + item.id + '_700.png 2x'"
+          :src="item.image.file.url"
           :alt="item.title"
         >
       </router-link>
@@ -18,7 +17,7 @@
         {{ item.price | numberFormat}} ₽
       </span>
       <color-select
-        :colors-list="$store.getters.getEnabledColors(item.colors)"
+        :colors-list="item.colors"
         :color-id.sync="selectedColorId"
       />
     </li>

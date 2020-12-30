@@ -11,7 +11,6 @@
 <script>
 import MainFooter from './components/MainFooter'
 import MainHeader from './components/MainHeader'
-import Colors from '@/data/colors'
 
 export default {
   components: { MainHeader, MainFooter },
@@ -23,7 +22,11 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('setPallete', Colors)
+    const userAccessKey = localStorage.getItem('userAccessKey')
+    if (userAccessKey) {
+      this.$store.commit('updateUserAccessKey', userAccessKey)
+    }
+    this.$store.dispatch('loadCart')
   },
 }
 

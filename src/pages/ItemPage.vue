@@ -1,5 +1,14 @@
 <template>
-  <main class="content container">
+  <main class="content container" v-if="isLoadingError">
+    <div v-if="isLoadingError">
+      <h3>Ошибка загрузки</h3>
+      <input type="button" value="Попробовать ещё раз" @click.prevent="loadItemInfo()">
+    </div>
+  </main>
+  <main v-else-if="showLoading">
+    <loading :showLoading="showLoading" />
+  </main>
+  <main v-else-if="itemInfo" class="content container">
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -8,8 +17,8 @@
           </router-link>
         </li>
         <li class="breadcrumbs__item">
-          <router-link class="breadcrumbs__link" href="#" :to="{name: 'main', params: {catId: currentItem.categoryId}}">
-            {{ currentCategory.title }}
+          <router-link class="breadcrumbs__link" href="#" :to="{name: 'main', params: {catId: currentItem.category.id}}">
+            {{ currentItem.category.title }}
           </router-link>
         </li>
         <li class="breadcrumbs__item">
@@ -26,8 +35,7 @@
           <img 
             width="570"
             height="570" 
-            :src="'/img/goods/' + currentItem.id + '_350.png'"
-            :srcset="'/img/goods/' + currentItem.id + '_700.png 2x'"
+            :src="currentItem.image.file.url"
             :alt="currentItem.title"
           >
         </div>
@@ -46,8 +54,8 @@
 
             <fieldset class="form__block">
               <color-select
-                :colors-list="$store.getters.getEnabledColors(currentItem.colors)"
-                :color-id="currentItem.colors[0]"
+                :colors-list="currentItem.colors"
+                :color-id="currentItem.colors[0].id"
               />
             </fieldset>
 
@@ -170,17 +178,23 @@
 </template>
 
 <script>
-import Goods from '@/data/goods'
-import Categories from '@/data/categories'
-import ColorSelect from '../components/ColorSelect.vue'
+import ColorSelect from '@/components/ColorSelect'
 import numberFormat from '@/helpers/numberFormat.js'
+import {API_BASE_URL} from '@/config.js'
+import Loading from '@/components/Loading.vue'
+import axios from 'axios'
+
+
 
 export default {
-  components: { ColorSelect },
+  components: { ColorSelect, Loading },
   
   data() {
     return {
       itemAmount: 1,
+      showLoading: false,
+      isLoadingError: false,
+      itemInfo: null
     }
   },
 
@@ -190,19 +204,37 @@ export default {
 
   computed: {
     currentItem() {
-      return Goods.find(item => item.id === this.$route.params.id)
+      return this.itemInfo ? this.itemInfo : {}
     },
-
-    currentCategory() {
-      return Categories.find(item => item.id === this.currentItem.categoryId)
-    }
   },
 
   methods: {
     addToCart() {
-      this.$store.dispatch('addToCart', {id: this.currentItem.id, amount: this.itemAmount})
+      //this.$store.dispatch('addToCart', {id: this.currentItem.id, amount: this.itemAmount})
     },
 
+    loadItemInfo() {
+      this.showLoading = true
+      this.isLoadingError = false
+      clearTimeout(this.loadProductsTimer)
+
+      this.loadProductsTimer = setTimeout(() => {
+        axios.get(API_BASE_URL + `/api/products/` + this.$route.params.id)
+          .then(response => this.itemInfo = response.data)
+          .catch(() => this.isLoadingError = true)
+          .then(() => this.showLoading = false)
+      }, 0)
+    }
+
+  },
+
+  watch: {
+    '$route.params.id': {
+      handler() {
+        this.loadItemInfo()
+      },
+      immediate: true
+    }
   }
 }
 </script>

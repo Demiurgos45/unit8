@@ -18,13 +18,14 @@
         <legend class="form__legend">Категория</legend>
         <label class="form__label form__label--select">
           <select class="form__select" type="text" name="category" v-model.number="currentCategoryId">
+            <option value="0">Все категории</option>
             <option :value="category.id" v-for="category in categories" :key="category.id"> {{ category.title }} </option>
           </select>
         </label>
       </fieldset>
       
       <color-select 
-        :colors-list="$store.getters.getAllPallete"
+        :colors-list="colorsList"
         :show-all-colors="true"
         :colorId.sync="currentColorId"
       />
@@ -99,8 +100,9 @@
 </template>
 
 <script>
-import Categories from '@/data/categories'
 import ColorSelect from './ColorSelect.vue'
+import axios from 'axios'
+import {API_BASE_URL} from '@/config.js'
 
 export default {
   components: { ColorSelect },
@@ -111,14 +113,19 @@ export default {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: this.categoryId,
-      currentColorId: 0
+      currentColorId: 0,
+      categoriesMain: null,
+      colorsMain: null
     }
   },
 
   computed: {
     categories() {
-      return Categories
+      return this.categoriesMain ? this.categoriesMain.items : []
     },
+    colorsList() {
+      return this.colorsMain ? this.colorsMain.items : []
+    }
   },
 
   methods: {
@@ -142,7 +149,18 @@ export default {
       this.setFilter(0, 0, 0, 0)
     },
 
+    loadCategories() {
+      axios.get(API_BASE_URL + '/api/productCategories')
+        .then(response => this.categoriesMain = response.data)
+      axios.get(API_BASE_URL + '/api/colors')
+        .then(response => this.colorsMain = response.data)
+    }
+
   },
+
+  created() {
+    this.loadCategories()
+  }
 
 }
 </script>

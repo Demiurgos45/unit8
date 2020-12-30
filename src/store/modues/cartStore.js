@@ -1,14 +1,13 @@
-import Goods from '@/data/goods'
+import axios from 'axios'
+import { API_BASE_URL } from '../../config'
+
 export default {
   state: {
-    cartProducts: [{
-      id: '20201207_0014',
-      amount: 2
-    },
-    {
-      id: '20201207_0010',
-      amount: 1
-    }]
+    cartProducts: [],
+
+    userAccessKey: null,
+
+    cartProductsData: []
   },
 
   getters: {
@@ -21,16 +20,17 @@ export default {
     },
 
     getItemsDetail(state) {
-      return state.cartProducts.map( (item) => {
-        return {
-          ...item,
-          details: Goods.find(it => it.id === item.id)
-        }
-      })
+      // return state.cartProducts.map( (item) => {
+      //   return {
+      //     ...item,
+      //     //details: Goods.find(it => it.id === item.id)
+      //   }
+      // })
+      return state.cartProductsData
     },
 
-    cartTotalPrice(state, getters) {
-      return getters.getItemsDetail.reduce((total, item) => (item.details.price * item.amount) + total, 0)
+    cartTotalPrice(state) {
+      return state.cartProductsData.reduce((total, item) => (item.price * item.quantity) + total, 0)
     }
 
   },
@@ -50,6 +50,21 @@ export default {
     deleteItem(state, id) {
       state.cartProducts = state.cartProducts.filter(item => item.id !== id)
     },
+
+    updateUserAccessKey(state, key) {
+      state.userAccessKey = key
+    },
+    updateCartProductsData(state, data) {
+      state.cartProductsData = data
+    },
+    syncCartProducts(state) {
+      state.cartProducts = state.cartProductsData.map(item => {
+        return{
+          id: item.product.id,
+          amount: item.quantity
+        }
+      })
+    }
   },
     
   actions: {
@@ -72,6 +87,22 @@ export default {
 
     deleteItem(context, id) {
       context.commit('deleteItem', id)
+    },
+
+    loadCart(context) {
+      axios.get(API_BASE_URL + '/api/baskets',{
+        params: {
+          userAccessKey: context.state.userAccessKey
+        }
+      })
+        .then(response => {
+          if (!context.state.userAccessKey) {
+            localStorage.setItem('userAccessKey', response.data.user.accessKey)
+            context.commit('updateUserAccessKey', response.data.user.accessKey)
+          }
+          context.commit('updateCartProductsData', response.data.items)
+          context.commit('syncCartProducts')
+        })
     }
   }
 }
