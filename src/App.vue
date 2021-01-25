@@ -21,7 +21,7 @@ export default {
     }
   },
 
-  created() {
+  mounted() {
     const userAccessKey = localStorage.getItem('userAccessKey')
     if (userAccessKey) {
       this.$store.commit('updateUserAccessKey', userAccessKey)

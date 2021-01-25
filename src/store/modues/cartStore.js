@@ -7,7 +7,7 @@ export default {
 
     userAccessKey: null,
 
-    cartProductsData: []
+    cartProductsData: [],
   },
 
   getters: {
@@ -20,13 +20,16 @@ export default {
     },
 
     getItemsDetail(state) {
-      // return state.cartProducts.map( (item) => {
-      //   return {
-      //     ...item,
-      //     //details: Goods.find(it => it.id === item.id)
-      //   }
-      // })
-      return state.cartProductsData
+      return state.cartProducts.map( (item) => {
+        const product = state.cartProductsData.find(p => p.product.id === item.id).product;
+        return {
+          ...item,
+          product: {
+            ...product,
+            image: product.image
+          }
+        }
+      })
     },
 
     cartTotalPrice(state) {
@@ -35,16 +38,12 @@ export default {
 
   },
   mutations: {
-    addItem(state, newItem) {
-      state.cartProducts.push(newItem)
-    },
-
     addAmount(state, updateItem) {
       state.cartProducts[updateItem.id].amount += updateItem.amount
     },
 
     updateAmount(state, {id, amount}) {
-      state.cartProducts[id].amount = amount
+      state.cartProducts.find(p => p.id === id).amount = amount
     },
 
     deleteItem(state, id) {
@@ -59,7 +58,7 @@ export default {
     },
     syncCartProducts(state) {
       state.cartProducts = state.cartProductsData.map(item => {
-        return{
+        return {
           id: item.product.id,
           amount: item.quantity
         }
@@ -68,25 +67,61 @@ export default {
   },
     
   actions: {
-    addToCart(context, addedItem) {
-      const cartId = context.state.cartProducts.findIndex( (item) => item.id === addedItem.id)
-      if (cartId < 0) {
-        context.commit('addItem', addedItem)
-      }
-      else {
-        addedItem.id = cartId
-        context.commit('addAmount', addedItem)
+    updateAmount(context, {id, amount}) {
+      context.commit("updateAmount", {id, amount})
+      
+      if (amount > 0) {
+        axios
+          .put(API_BASE_URL + '/api/baskets/products', {
+            productId: id,
+            quantity: amount
+          }, {
+            params: {
+              userAccessKey: context.state.userAccessKey
+            }
+          })
+          .then(response => {
+            context.commit('updateCartProductsData', response.data.items)
+          })
+          .catch(() => {
+            context.commit('syncCartProducts')
+          })
       }
     },
 
-    updateAmount(context, {id, amount}) {
-      if (amount < 1) {amount = 1}
-      const cartId = context.state.cartProducts.findIndex((item) => item.id === id)
-      context.commit('updateAmount', {id: cartId, amount})
+    addToCart(context, addedItem) {
+      return axios
+        .post(API_BASE_URL + '/api/baskets/products', {
+          productId: addedItem.id,
+          quantity: addedItem.amount
+        }, {
+          params: {
+            userAccessKey: context.state.userAccessKey
+          }
+        })
+        .then(response => {
+          context.commit('updateCartProductsData', response.data.items)
+          context.commit('syncCartProducts')
+        })
     },
 
     deleteItem(context, id) {
       context.commit('deleteItem', id)
+
+      axios
+        .delete(API_BASE_URL + '/api/baskets/products', {
+          productId: id,
+        }, {
+          params: {
+            userAccessKey: context.state.userAccessKey
+          }
+        })
+        .then(response => {
+          context.commit('updateCartProductsData', response.data.items)
+        })
+        .catch(() => {
+          context.commit('syncCartProducts')
+        })
     },
 
     loadCart(context) {

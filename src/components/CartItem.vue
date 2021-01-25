@@ -42,13 +42,13 @@
     </div>
 
     <b class="product__price">
-      {{ item.quantity * item.price | numberFormat }} ₽
+      {{ item.amount * item.product.price | numberFormat }} ₽
     </b>
 
     <button
       class="product__del button-del"
       type="button" aria-label="Удалить товар из корзины"
-      @click.prevent="deleteItem(item.product.id)"
+      @click.prevent="deleteItem(item.id)"
     >
       <svg width="20" height="20" fill="currentColor">
         <use xlink:href="#icon-close"></use>
@@ -70,7 +70,7 @@ export default {
   computed: {
     amount: {
       get() {
-        return this.item.quantity
+        return this.item.amount
       },
       set(val) {
         this.$store.dispatch('updateAmount', {id: this.item.id, amount: val})
