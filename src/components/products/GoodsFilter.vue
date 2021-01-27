@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import ColorSelect from './ColorSelect.vue'
+import ColorSelect from '@/components/common/ColorSelect.vue'
 import axios from 'axios'
 import {API_BASE_URL} from '@/config.js'
 

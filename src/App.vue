@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import MainFooter from './components/MainFooter'
-import MainHeader from './components/MainHeader'
+import MainFooter from '@/components/TheFooter'
+import MainHeader from '@/components/TheHeader'
 
 export default {
   components: { MainHeader, MainFooter },

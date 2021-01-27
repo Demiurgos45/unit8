@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import ColorSelect from './ColorSelect.vue'
+import ColorSelect from '@/components/common/ColorSelect.vue'
 import numberFormat from '@/helpers/numberFormat'
 
 export default {

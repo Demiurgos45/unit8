@@ -110,10 +110,11 @@ export default {
 
       axios
         .delete(API_BASE_URL + '/api/baskets/products', {
-          productId: id,
-        }, {
           params: {
-            userAccessKey: context.state.userAccessKey
+            userAccessKey: context.state.userAccessKey,
+          },
+          data: {
+            productId: id
           }
         })
         .then(response => {

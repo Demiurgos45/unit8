@@ -43,11 +43,11 @@
 
 <script>
 import BasePagination from '@/components/BasePagination'
-import GoodsFilter from '@/components/GoodsFilter'
-import GoodsList from '@/components/GoodsList'
+import GoodsFilter from '@/components/products/GoodsFilter'
+import GoodsList from '@/components/products/GoodsList'
 import axios from 'axios'
 import {API_BASE_URL} from '@/config.js'
-import Loading from '@/components/Loading.vue'
+import Loading from '@/components/common/Loading.vue'
 
 export default {
   components: {GoodsList, BasePagination, GoodsFilter, Loading},

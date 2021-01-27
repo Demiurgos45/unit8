@@ -130,10 +130,10 @@
 </template>
 
 <script>
-import ColorSelect from '@/components/ColorSelect'
+import ColorSelect from '@/components/common/ColorSelect'
 import numberFormat from '@/helpers/numberFormat.js'
 import {API_BASE_URL} from '@/config.js'
-import Loading from '@/components/Loading.vue'
+import Loading from '@/components/common/Loading.vue'
 import axios from 'axios'
 
 
