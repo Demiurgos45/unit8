@@ -116,7 +116,7 @@
                 </button>
               </div>
 
-              <button class="button button--primery" type="submit" :disabled="productAdded">
+              <button class="button button--primery" type="submit" :disabled="productAddSending">
                 В корзину
               </button>
             </div>

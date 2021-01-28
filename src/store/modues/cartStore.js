@@ -8,11 +8,21 @@ export default {
     userAccessKey: null,
 
     cartProductsData: [],
+
+    orderInfo: {}
   },
 
   getters: {
     itemsCount(state) {
       return state.cartProducts.reduce( (sum, item) => sum + item.amount, 0)
+    },
+
+    userAccessKey(state) {
+      return state.userAccessKey
+    },
+
+    getOrderInfo(state) {
+      return state.orderInfo
     },
 
     goodsCount(state) {
@@ -26,20 +36,40 @@ export default {
           ...item,
           product: {
             ...product,
-            image: product.image
           }
         }
       })
     },
 
+    getItemsListDetail(state) {
+      return state.cartProductsData
+    },
+
     cartTotalPrice(state) {
       return state.cartProductsData.reduce((total, item) => (item.price * item.quantity) + total, 0)
+    },
+
+    orderTotalPrice(state) {
+      return state.orderInfo.basket.items.reduce((total, item) => (item.price * item.quantity) + total, 0) || 0
+    },
+
+    orderTotalItems(state) {
+      return state.orderInfo.basket.items.reduce((total, item) => (item.quantity) + total, 0) || 0
     }
 
   },
   mutations: {
     addAmount(state, updateItem) {
       state.cartProducts[updateItem.id].amount += updateItem.amount
+    },
+
+    updateOrderInfo(state, info) {
+      state.orderInfo = info
+    },
+
+    resetCart(state) {
+      state.cartProducts = []
+      state.cartProductsData = []
     },
 
     updateAmount(state, {id, amount}) {
@@ -67,6 +97,26 @@ export default {
   },
     
   actions: {
+    updateOrderInfo(context, info) {
+      context.commit('updateOrderInfo', info)
+    },
+
+    gettingOrderInfo(context, id) {
+      if ((!context.state.orderInfo)) {
+        axios.get(API_BASE_URL + '/api/orders/' + id, {
+          params: {
+            userAccessKey: context.state.userAccessKey
+          }
+        })
+        .then(response => {
+          context.commit('updateOrderInfo', response.data)
+        })
+        .catch(error => {
+          context.commit('updateOrderInfo', error)
+        })
+      }
+    },
+
     updateAmount(context, {id, amount}) {
       context.commit("updateAmount", {id, amount})
       
@@ -87,6 +137,10 @@ export default {
             context.commit('syncCartProducts')
           })
       }
+    },
+
+    resetCart(context) {
+      context.commit('resetCart')
     },
 
     addToCart(context, addedItem) {
