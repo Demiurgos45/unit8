@@ -1,9 +1,5 @@
 <template>
-  <main v-if="checkErr" class="content container">
-    <h3>Ошибка:</h3>
-    <h4> {{orderInfo.err.toJSON() }} </h4>
-  </main>
-  <main v-else-if="basket !== null" class="content container">
+  <main v-if="basket !== null" class="content container">
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -125,34 +121,41 @@ export default {
   },
 
   methods: {
-    
+    loadOrderInfo() {
+      this.orderId = this.$route.params.id || null
+      if (this.orderId) {
+        this.orderInfo = this.$store.getters.getOrderInfo
+
+        if ((!this.orderInfo) || (this.orderInfo.id !== this.orderId)) {
+          axios.get(API_BASE_URL + '/api/orders/' + this.orderId, {
+            params: {
+              userAccessKey: this.$store.getters.userAccessKey
+            }
+          })
+          .then(response => {
+            this.$store.dispatch('updateOrderInfo', response.data)
+            this.orderInfo = this.$store.getters.getOrderInfo
+          })
+          .catch( () => {
+            this.$router.push({name: 'errorPage', params: { '0': '/error'}})
+          })
+        }
+      }
+    }
+  },
+
+  watch: {
+    '$route.params.id': {
+      immediate: true,
+      handler() {
+        this.loadOrderInfo()
+      }
+    }
   },
 
   created() {
-    this.orderId = this.$route.params.id || null
-    if (this.orderId) {
-      this.orderInfo = this.$store.getters.getOrderInfo
 
-      if ((!this.orderInfo) || (this.orderInfo.id !== this.orderId)) {
-        axios.get(API_BASE_URL + '/api/orders/' + this.orderId, {
-          params: {
-            userAccessKey: this.$store.getters.userAccessKey
-          }
-        })
-        .then(response => {
-          this.$store.dispatch('updateOrderInfo', response.data)
-        })
-        .catch(error => {
-          this.$store.dispatch('updateOrderInfo', {err: error})
-        })
-        .then ( () => {
-          this.orderInfo = this.$store.getters.getOrderInfo
-        })
-        
-        
-
-      }
-    }
+    
   }
 }
 </script>

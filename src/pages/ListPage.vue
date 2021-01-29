@@ -109,18 +109,12 @@ export default {
       this.loadProducts()
     },
 
-    "filterState.categoryId"() {
-      this.loadProducts()
-    },
-    "filterState.priceFrom"() {
-      this.loadProducts()
-    },
-    "filterState.priceTo"() {
-      this.loadProducts()
-    },
-    "filterState.colorId"() {
-      this.loadProducts()
-    }
+    filterState: {
+      deep: true,
+      handler() {
+        this.loadProducts()
+      }
+    }    
   },
 
   created() {
